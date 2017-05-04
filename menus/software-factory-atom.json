@@ -1,0 +1,26 @@
+{
+  "context-menu": {
+    "atom-text-editor": [
+      {
+        "label": "Toggle software-factory-atom",
+        "command": "software-factory-atom:toggle"
+      }
+    ]
+  },
+  "menu": [
+    {
+      "label": "Packages",
+      "submenu": [
+        {
+          "label": "software-factory-atom",
+          "submenu": [
+            {
+              "label": "Toggle",
+              "command": "software-factory-atom:toggle"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

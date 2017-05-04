@@ -1,0 +1,138 @@
+'.source.yaml':
+
+    'new job template':
+        'prefix': 'newjob',
+        'body': """
+- job:
+    name: '${1:my new job}'
+    defaults: global
+    builders:
+      - prepare-workspace
+      - ${2:list builders here}
+      - shell: |
+          ${3:echo "cool job eh?"}
+    publishers:
+      - ${4:list publishers here}
+    wrappers:
+      - ${5:list wrappers here}
+    triggers:
+      - zuul
+    node: ${6:node name}$0
+        """
+
+    'credentials binding for a file':
+        'prefix': 'credsfile'
+        'body': """
+      - credentials-binding:
+        - file:
+           credential-id: ${1:jenkins credentials id}
+           variable: ${2:VARIABLE_IN_JOB_SCRIPT}
+        """
+
+    'credentials binding for some text':
+        'prefix': 'credstext'
+        'body': """
+      - credentials-binding:
+        - text:
+           credential-id: ${1:jenkins credentials id}
+           variable: ${2:VARIABLE_IN_JOB_SCRIPT}
+        """
+    'new zuul pipeline for a repository':
+        'prefix': 'pipeline'
+        'body': """
+  - name: ${1:repository name}
+    check:
+      - ${2:preliminary check jobs}
+    gate:
+      - ${3:jobs to run before merging a patch}
+    post:
+      - ${4:jobs to run after merging a patch}
+    tag:
+      - ${5:jobs to run after pushing a tag}
+    periodic:
+      - ${6:jobs to run daily on master}
+        """
+
+    'new resources file (high level template)':
+        'prefix': 'newresources'
+        'body': """
+resources:
+  projects:
+    $1
+  acls:
+    $2
+  groups:
+    $3
+  repos:
+    $4
+        """
+
+    'new Software Factory project':
+        'prefix': 'newproject'
+        'body': """
+    ${1:project-name}:
+      name: $1
+      description: $2
+      website: $3
+      documentation: ${4:http://url/to/doc/}
+      issue-tracker: ${5:SFStoryboard}
+      mailing-lists:
+      - $6
+      contacts:
+      - ${7:productowner@company.org}
+      source-repositories:
+      - $8
+        """
+
+    'OpenStack-style gerrit ACL':
+        'prefix': 'newacl'
+        'body': """
+      file: |
+        [access "refs/*"]
+          read = group ${1:mycoolproject}-core
+          owner = group ${1:mycoolproject}-ptl
+          create = group ${1:mycoolproject}-core
+        [access "refs/heads/*"]
+            label-Verified = -2..+2 group ${1:mycoolproject}-ptl
+            label-Code-Review = -2..+2 group ${1:mycoolproject}-core
+            label-Workflow = -1..+1 group ${1:mycoolproject}-core
+            rebase = group ${1:mycoolproject}-core
+            abandon = group ${1:mycoolproject}-core
+            submit = group ${1:mycoolproject}-ptl
+            read = group ${1:mycoolproject}-core
+            create = group ${1:mycoolproject}-core
+            push = group ${1:mycoolproject}-core
+        [access "refs/tags/*"]
+            pushTag = group ${1:mycoolproject}-core
+            pushSignedTag = group ${1:mycoolproject}-core
+            create = group ${1:mycoolproject}-core
+        [access "refs/meta/config"]
+            read = group ${1:mycoolproject}-core
+        [receive]
+            requireChangeId = true
+        [submit]
+            mergeContent = true
+            action = merge if necessary
+      groups:
+      - ${1:mycoolproject}-core
+      - ${1:mycoolproject}-ptl
+        """
+
+    'new Software Factory group':
+        'prefix': 'newgroup'
+        'body': """
+    ${1:group-name}:
+      description: $2
+      members:
+      - ${3:member@company.org}
+      name: $1
+        """
+
+    'new Software Factory repository':
+        'prefix': 'newrepo'
+        'body': """
+    ${1:repo-name}:
+      acl: ${2:acl-name}
+      description: $3
+      name: $1
+        """
